@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Personal Hub</title>
+<style>
+:root{
+  --bg:#FAFAF8;--surface:#FFFFFF;--text:#171717;--muted:#8A8A84;--line:#EEEDE9;
+  --accent:#2F5D50;--accent-soft:#EDF2EF;--on-accent:#FFFFFF;--danger:#B5523B;
+  --t-msg:var(--accent);--t-news:var(--accent);--t-lib:var(--accent);--t-up:var(--accent);
+  --shadow:none;--page:#EFEEEA;
+}
+:root[data-theme="dark"]{
+  --bg:#0F0F0E;--surface:#181817;--text:#EDEDEA;--muted:#8F8F8A;--line:#242423;
+  --accent:#8FBFAE;--accent-soft:#1B2420;--on-accent:#0F0F0E;--danger:#E58E78;
+  --shadow:none;--page:#080807;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--page);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+.serif{font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
+#phone{width:390px;height:min(844px,calc(100vh - 32px));background:var(--bg);border-radius:36px;box-shadow:0 0 0 1px var(--line),0 20px 60px rgba(0,0,0,.08);overflow:hidden;display:flex;flex-direction:column;position:relative}
+#screen{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;min-height:0}
+.pad{padding:0 16px 24px}
+.head{display:flex;align-items:center;gap:8px;padding:22px 16px 10px;min-height:68px}
+.head h1{margin:0;font-size:28px;font-weight:600;line-height:1.15;letter-spacing:-.03em;flex:1;min-width:0}
+.head h1.sm{font-size:19px}
+.sub{color:var(--muted);font-size:13px;margin:-4px 16px 10px}
+.iconbtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--text);flex:none}
+.iconbtn:hover{background:var(--accent-soft)}
+.card{background:var(--surface);border-radius:20px;padding:20px;margin-bottom:12px}
+.card h2{margin:0 0 12px;font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{min-height:44px;padding:0 18px;border-radius:14px;background:var(--accent);color:var(--on-accent);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.ghost{background:var(--accent-soft);color:var(--text)}
+.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--line)}
+.btn.block{width:100%}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;background:var(--surface);border:1px solid transparent;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.search,.head,.sub,.banner{flex:none}
+.chips{flex:none;display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.big{font-size:46px;font-weight:300;letter-spacing:-.04em;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--surface);border-radius:16px;padding:14px}
+.stat b{display:block;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.bar{height:3px;border-radius:99px;background:var(--accent-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
+.mono{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;flex:none}
+.list>*+*{border-top:1px solid var(--line)}
+.li{display:flex;align-items:center;gap:12px;padding:12px 0;width:100%;text-align:left;min-height:56px}
+.badge{min-width:20px;height:20px;border-radius:99px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:700;display:grid;place-items:center;padding:0 6px}
+.search{display:flex;align-items:center;gap:8px;margin:0 16px 12px;padding:0 14px;height:44px;border-radius:14px;background:var(--surface);border:1px solid transparent;color:var(--muted)}
+.search input{flex:1;border:0;background:none;outline:0;min-width:0}
+.field{width:100%;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:10px 12px;outline:0}
+.field:focus,.search:focus-within{border-color:var(--accent)}
+textarea.field{resize:none;min-height:96px}
+.tabbar{display:flex;border-top:1px solid var(--line);background:var(--surface);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.tab{flex:1;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--muted);border-radius:12px;position:relative}
+.tab.on{color:var(--accent);font-weight:600}
+.tab .badge{position:absolute;top:2px;right:calc(50% - 22px);min-width:16px;height:16px;font-size:10px}
+.msgs{flex:1;overflow-y:auto;padding:8px 16px;display:flex;flex-direction:column;gap:6px}
+.bub{max-width:78%;padding:9px 13px;border-radius:18px;background:var(--surface);border:0;align-self:flex-start;word-wrap:break-word}
+.bub.me{align-self:flex-end;background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.bub time{display:block;font-size:11px;opacity:.7;margin-top:2px}
+.composer{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface)}
+.composer input{flex:1;min-width:0;height:44px;border-radius:22px;border:1px solid var(--line);background:var(--bg);padding:0 16px;outline:0}
+.composer input:focus{border-color:var(--accent)}
+.send{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;flex:none}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.folder{background:var(--surface);border:1px solid transparent;border-radius:20px;padding:14px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:140px;min-width:0}
+.goal{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;color:var(--muted)}
+.folder.add{border:1px dashed var(--line);align-items:center;justify-content:center;color:var(--muted);background:transparent}
+.status{min-height:32px;padding:0 12px;border-radius:99px;font-size:12px;font-weight:500;background:var(--accent-soft);color:var(--muted);flex:none}
+.status.done{color:var(--on-accent)}
+.status.done{background:var(--accent);color:var(--on-accent)}
+.seg{display:flex;background:var(--accent-soft);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;min-height:40px;border-radius:10px;font-size:14px}
+.seg button.on{background:var(--surface);font-weight:600;box-shadow:var(--shadow)}
+.tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.banner{background:var(--accent-soft);border:0;border-radius:20px;padding:18px;margin-bottom:12px}
+.note{display:block;width:100%;text-align:left;padding:12px 0}
+.note b{display:block}
+.note span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:14px}
+.modalbg{position:absolute;inset:0;background:rgba(10,11,16,.5);display:flex;align-items:flex-end;z-index:10}
+.sheet{background:var(--surface);width:100%;border-radius:24px 24px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));max-height:90%;overflow:auto}
+.sheet h3{margin:0 0 12px;font-size:18px}
+.sheet label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid transparent}
+.sw.on{border-color:var(--text)}
+.switch{width:52px;height:32px;border-radius:99px;background:var(--line);position:relative;flex:none}
+.switch::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.switch.on{background:var(--accent)}
+.switch.on::after{left:24px}
+.empty{color:var(--muted);text-align:center;padding:28px 12px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:480px){
+  body{display:block;min-height:100dvh}
+  #phone{width:100%;height:100dvh;border-radius:0;box-shadow:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="phone"><div id="screen"></div><div id="tabs"></div><div id="modal"></div></div>
+<script>
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const P = {
+  today:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/>',
+  news:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+  book:'<path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/>',
+  up:'<path d="M4 17l6-6 4 4 6-7"/><path d="M15 8h5v5"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>', plus:'<path d="M12 5v14M5 12h14"/>',
+  send:'<path d="M4 12l16-8-6 16-3-7z"/>', search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+  note:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/>',
+  trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>', check:'<path d="M5 12l5 5 9-10"/>',
+  mark:'<path d="M7 4h10v17l-5-4-5 4z"/>', chev:'<path d="M9 5l7 7-7 7"/>',
+  edit:'<path d="M4 20l1-4 11-11 3 3L8 19z"/>'
+};
+const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+const fmt = m => m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ' ' + m % 60 + 'm' : ''}` : `${m}m`;
+const nowTime = () => new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+const nowDate = () => new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+const COLORS = ['#A8553A', '#4F7186', '#5E7F61', '#8F7336', '#7A5C89', '#3F3F3D'];
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+/* ---------- sample data ---------- */
+const USAGE = {
+  week: [['S',205],['M',190],['T',154],['W',212],['T',128],['F',176],['S',161]],
+  pickups: 47,
+  apps: [['Instagram',58,'#A8553A'],['YouTube',44,'#8F7336'],['WhatsApp',31,'#5E7F61'],['Personal Hub',22,'#2F5D50'],['Chrome',6,'#8A8A84']],
+  hours: [0,0,0,0,0,2,6,12,9,5,4,6,10,8,5,4,7,9,12,18,16,14,10,4],
+  hub: {msg: 9, news: 6, lib: 5, up: 2}
+};
+const TODAY = USAGE.week[6][1];
+
+const item = (t, k, m, tk) => ({id: uid(), t, k, m, tk, st: 0});
+function seed() {
+  return {
+    v: 1, connected: false,
+    settings: {theme: 'auto', limit: 180, remind: true},
+    contacts: [
+      {id:'c1', name:'Aarav', color:COLORS[1], unread:2, msgs:[{t:'Did you see the match last night?',time:'09:12'},{t:'That last over was unreal',time:'09:13'}]},
+      {id:'c2', name:'Meera', color:COLORS[2], unread:1, msgs:[{me:1,t:'Sent you the notes from the call',time:'Yesterday'},{t:'Thanks! Can we talk Monday?',time:'08:40'}]},
+      {id:'c3', name:'Karthik', color:COLORS[3], unread:0, msgs:[{t:'Dinner on Sunday?',time:'Yesterday'},{me:1,t:'Yes, 8 works',time:'Yesterday'}]},
+      {id:'c4', name:'Divya', color:COLORS[0], unread:0, msgs:[{t:'Loved the book you recommended',time:'Thu'}]},
+      {id:'c5', name:'Rohan', color:COLORS[4], unread:3, msgs:[{t:'Are you free to review my pitch deck?',time:'Thu'},{t:'Even 15 minutes helps',time:'Thu'},{t:'No rush though',time:'Thu'}]},
+      {id:'c6', name:'Sana', color:COLORS[5], unread:0, msgs:[{me:1,t:'Happy birthday!',time:'Wed'},{t:'Thank you so much',time:'Wed'}]},
+      {id:'c7', name:'Priya', color:COLORS[2], unread:0, msgs:[{t:'Trip photos are in the album',time:'Tue'}]},
+      {id:'c8', name:'Vikram', color:COLORS[1], unread:0, msgs:[{t:'Let us catch up soon',time:'Mon'}]}
+    ],
+    news: [
+      {id:'n1', tag:'Research', t:'Smaller models are catching up on everyday coding tasks', s:'Compact models now handle routine programming work at a fraction of the cost, changing how teams choose between size and speed.', min:4, read:0, saved:0},
+      {id:'n2', tag:'Industry', t:'Why teams are moving from chatbots to agents that finish tasks', s:'Companies are shifting from answering questions to automating whole workflows, and learning where human review still matters.', min:5, read:0, saved:0},
+      {id:'n3', tag:'Tools', t:'A practical guide to testing your own prompts', s:'A simple routine of fixed examples and side-by-side comparisons catches most regressions before users do.', min:6, read:0, saved:0},
+      {id:'n4', tag:'Policy', t:'Regulators discuss labels for AI-generated content', s:'Proposals focus on clear disclosure rather than bans, and platforms are testing how visible a label has to be.', min:3, read:0, saved:0},
+      {id:'n5', tag:'Tools', t:'Voice assistants are getting better at being interrupted', s:'Natural turn-taking is the new benchmark, with faster responses and fewer awkward pauses.', min:3, read:0, saved:0}
+    ],
+    topics: [
+      {id:'krishnamurti', sec:'lib', name:'J. Krishnamurti', c:COLORS[0], goal:'Understand attention, conditioning and freedom from the known.', items:[
+        item('Freedom from the Known','Book','On conditioning and seeing clearly','Watching a thought without judging it is already a kind of freedom from it.'),
+        item('The First and Last Freedom','Book','Collected talks and dialogues','Change begins with understanding yourself, not with following a method.'),
+        item('On attention and learning','Talk','Why listening fully is different from agreeing','Real learning needs attention with no goal to win.')]},
+      {id:'osho', sec:'lib', name:'Osho', c:COLORS[1], goal:'Explore awareness, meditation and living without guilt.', items:[
+        item('The Book of Secrets','Book','Meditation techniques explained','Awareness can start from any ordinary moment, such as a breath or a pause.'),
+        item('On awareness','Talk','Being the witness of your own mind','Observing without taking sides loosens the grip of habit.'),
+        item('Creativity','Book','Creating without a fear of judgement','Creativity needs play more than discipline.')]},
+      {id:'kafka', sec:'lib', name:'Franz Kafka', c:COLORS[2], goal:'Read the major stories and understand the themes of guilt and bureaucracy.', items:[
+        item('The Metamorphosis','Story','A man wakes up changed, and his family adjusts','Alienation is often quietest at home.'),
+        item('Letter to His Father','Letter','A long, honest account of a difficult bond','Writing can be a way of arguing with someone you cannot face.'),
+        item('The Trial','Novel','Accused without being told the charge','Systems can be absurd and still feel entirely real.')]},
+      {id:'camus', sec:'lib', name:'Albert Camus', c:COLORS[3], goal:'Understand the absurd and how to live well anyway.', items:[
+        item('The Myth of Sisyphus','Essay','Finding meaning in the effort itself','We can choose to find the struggle enough.'),
+        item('The Stranger','Novel','A detached narrator and a quiet crisis','Honesty about feeling can unsettle a society more than rebellion.'),
+        item('The Plague','Novel','A town responds to an epidemic','Solidarity is a daily practice, not a grand gesture.')]},
+      {id:'sales', sec:'up', name:'Sales', c:COLORS[4], goal:'Run better discovery calls and close with confidence.', items:[
+        item('SPIN selling: ask better questions','Lesson','Situation, problem, implication, need-payoff','Let the buyer say the cost of the problem out loud before you pitch.'),
+        item('Discovery call checklist','Playbook','What to learn in the first 20 minutes','End every call with a clear next step and a date.'),
+        item('Handling the price objection','Lesson','Reframing cost as value','Price objections are often a signal that value is not yet clear.')]},
+      {id:'marketing', sec:'up', name:'Marketing', c:COLORS[5], goal:'Learn how products grow through content, referrals and positioning.', items:[
+        item('Dropbox: the referral loop','Case study','Free space for both sides of an invite','Reward both the sender and the receiver, and keep the invite one tap away.'),
+        item('Spotify Wrapped: turning data into content','Case study','Personal data people want to share','Give users something about themselves that is worth showing off.'),
+        item('HubSpot: inbound marketing','Case study','Teach first, sell later','Useful content builds trust long before a sales call.')]},
+      {id:'cases', sec:'up', name:'Case studies', c:COLORS[1], goal:'Collect growth stories and the lessons behind them.', items:[
+        item('Airbnb: better listing photos','Case study','Quality photos lifted bookings','A small, specific improvement to the first impression can move the whole funnel.'),
+        item('Slack: product-led growth','Case study','Teams spread the product themselves','If the product is good alone and better together, growth builds on itself.')]}
+    ],
+    notes: []
+  };
+}
+
+/* ---------- state ---------- */
+let S, KEY = 'personalhub.v1';
+function load() {
+  try { const r = localStorage.getItem(KEY); if (r) { const o = JSON.parse(r); if (o && o.v === 1) return o; } } catch (e) {}
+  return seed();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+S = load();
+const ui = {stack: [{n: 'today'}], q: '', filt: 'all', nf: 'all', nq: '', snooze: false, modal: null, newsTab: 'today'};
+const ROOTS = ['today', 'messages', 'news', 'library', 'upskill'];
+const cur = () => ui.stack[ui.stack.length - 1];
+const topic = id => S.topics.find(t => t.id === id);
+const contact = id => S.contacts.find(c => c.id === id);
+const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme() {
+  const th = S.settings.theme;
+  const dark = th === 'dark' || (th === 'auto' && mq && mq.matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+}
+if (mq) (mq.addEventListener ? mq.addEventListener('change', applyTheme) : mq.addListener(applyTheme));
+
+/* ---------- shared pieces ---------- */
+function head(title, o = {}) {
+  return `<div class="head">${o.back ? `<button class="iconbtn" data-a="back" aria-label="Back">${ic('back')}</button>` : ''}
+    <h1 class="${o.serif ? 'serif ' : ''}${o.sm ? 'sm' : ''} ell">${title}</h1>${o.right || ''}</div>${o.sub ? `<p class="sub">${o.sub}</p>` : ''}`;
+}
+const gearBtn = `<button class="iconbtn" data-a="go" data-v="settings" aria-label="Settings">${ic('gear')}</button>`;
+const notesBtn = `<button class="iconbtn" data-a="go" data-v="notes" aria-label="All notes">${ic('note')}</button>`;
+function mono(t, s) { return `<div class="mono serif" style="background:${t.c};${s || ''}">${esc(t.name.replace(/^J\. /, '').charAt(0).toUpperCase())}</div>`; }
+function ring(pct, label) {
+  const r = 52, c = 2 * Math.PI * r, over = pct >= 1, d = Math.min(pct, 1) * c;
+  return `<svg width="124" height="124" viewBox="0 0 124 124" role="img" aria-label="${label}">
+    <circle cx="62" cy="62" r="${r}" fill="none" stroke="var(--accent-soft)" stroke-width="12"/>
+    <circle cx="62" cy="62" r="${r}" fill="none" stroke="${over ? 'var(--danger)' : 'var(--accent)'}" stroke-width="12" stroke-linecap="round"
+      stroke-dasharray="${d} ${c}" transform="rotate(-90 62 62)"/>
+    <text x="62" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="var(--text)">${Math.round(pct * 100)}%</text></svg>`;
+}
+function weekChart() {
+  const w = USAGE.week, lim = S.settings.limit, max = Math.max(240, lim + 20, ...w.map(x => x[1]));
+  const W = 320, H = 150, base = 120, bw = 28, gap = (W - bw * 7) / 6, y = v => base - v / max * (base - 14);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Screen time for the last 7 days">`;
+  w.forEach((d, i) => {
+    const x = i * (bw + gap), h = base - y(d[1]), last = i === 6;
+    s += `<rect x="${x}" y="${y(d[1])}" width="${bw}" height="${h}" rx="6" fill="${last ? 'var(--accent)' : 'var(--accent-soft)'}"/>
+      <text x="${x + bw / 2}" y="${base + 18}" text-anchor="middle" font-size="12" fill="var(--muted)">${d[0]}</text>`;
+  });
+  s += `<line x1="0" x2="${W}" y1="${y(lim)}" y2="${y(lim)}" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
+    <div class="small muted" style="margin-top:4px"><span style="color:var(--danger)">- - -</span> Daily limit ${fmt(lim)} · today ${fmt(w[6][1])}</div>`;
+  return s;
+}
+function streak() {
+  let n = 0;
+  for (let i = 6; i >= 0; i--) { if (USAGE.week[i][1] <= S.settings.limit) n++; else break; }
+  return n;
+}
+function topicStats(t) {
+  const done = t.items.filter(i => i.st === 2).length;
+  return {done, total: t.items.length, pct: t.items.length ? done / t.items.length * 100 : 0};
+}
+function noteRow(n) {
+  const t = topic(n.topic), it = t && n.item ? t.items.find(i => i.id === n.item) : null;
+  return `<button class="note" data-a="openNote" data-id="${n.id}"><b>${esc(n.title || 'Untitled note')}</b>
+    <span>${esc(n.body || 'No text yet')}</span>
+    <span class="small" style="display:block;-webkit-line-clamp:1;margin-top:2px">${esc(n.date)} · ${esc(t ? t.name : 'Topic')}${it ? ' · ' + esc(it.t) : ''}</span></button>`;
+}
+
+/* ---------- views ---------- */
+function vToday() {
+  const lim = S.settings.limit, over = TODAY >= lim, left = lim - TODAY;
+  const d = new Date().toLocaleDateString('en-GB', {weekday: 'long', day: 'numeric', month: 'long'});
+  const hub = [['Messages', 'msg', 'messages', 'chat', 'var(--t-msg)'], ['AI News', 'news', 'news', 'news', 'var(--t-news)'],
+    ['Library', 'lib', 'library', 'book', 'var(--t-lib)'], ['Upskill', 'up', 'upskill', 'up', 'var(--t-up)']];
+  return head('Today', {right: notesBtn + gearBtn, sub: d}) + `<div class="pad">
+    ${over && !ui.snooze ? `<div class="banner" role="alert"><b>You have reached your ${fmt(lim)} limit</b>
+      <p class="small muted" style="margin:6px 0 12px">You have spent ${fmt(TODAY)} on your phone today. A short break could help.</p>
+      <div class="row"><button class="btn" data-a="snooze" data-m="0">Take a break</button><button class="btn ghost" data-a="snooze" data-m="5">5 more minutes</button></div></div>` : ''}
+    <div class="card"><div class="row"><div class="grow"><div class="small muted">Screen time today</div>
+      <div class="big" style="margin:6px 0">${fmt(TODAY)}</div>
+      <div class="small ${over ? '' : 'muted'}" ${over ? 'style="color:var(--danger)"' : ''}>${over ? `${fmt(-left)} over your limit` : `${fmt(left)} left of ${fmt(lim)}`}</div></div>
+      ${ring(TODAY / lim, `${Math.round(TODAY / lim * 100)} percent of the daily limit used`)}</div></div>
+    <div class="stats"><div class="stat"><b>${USAGE.pickups}</b><span class="small muted">Pickups</span></div>
+      <div class="stat"><b>${fmt(Math.round(USAGE.week.reduce((a, x) => a + x[1], 0) / 7))}</b><span class="small muted">Daily avg</span></div>
+      <div class="stat"><b>${streak()} days</b><span class="small muted">Under limit</span></div></div>
+    <div class="card"><div class="row" style="margin-bottom:6px"><h2 class="grow" style="margin:0">Last 7 days</h2>
+      <button class="small" style="color:var(--accent);min-height:44px;font-weight:600" data-a="go" data-v="usage">Details</button></div>${weekChart()}</div>
+    <div class="card"><h2>Top apps today</h2><div class="list">${USAGE.apps.map(a => `<div class="li"><span class="dot" style="background:${a[2]}"></span>
+      <div class="grow"><div class="row"><span class="grow">${a[0]}</span><span class="muted small">${fmt(a[1])}</span></div>
+      <div class="bar" style="margin-top:6px"><i style="width:${a[1] / TODAY * 100}%;background:${a[2]}"></i></div></div></div>`).join('')}</div></div>
+    <div class="card"><h2>Time in this hub</h2><div class="list">${hub.map(h => `<button class="li" data-a="tab" data-t="${h[2]}">
+      <span style="color:${h[4]}">${ic(h[3])}</span><span class="grow">${h[0]}</span><span class="muted small">${fmt(USAGE.hub[h[1]])}</span>
+      <span class="muted">${ic('chev', 18)}</span></button>`).join('')}</div></div></div>`;
+}
+function vUsage() {
+  const H = USAGE.hours, max = Math.max(...H), W = 320, bh = 90;
+  let s = `<svg viewBox="0 0 ${W} 116" width="100%" role="img" aria-label="Screen time by hour of day">`;
+  H.forEach((v, i) => { const h = v / max * bh; s += `<rect x="${i * 13.3 + 1}" y="${bh - h + 4}" width="10" height="${Math.max(h, 1)}" rx="3" fill="${v === max ? 'var(--accent)' : 'var(--accent-soft)'}"/>`; });
+  s += [0, 6, 12, 18].map(h => `<text x="${h * 13.3 + 6}" y="112" text-anchor="middle" font-size="11" fill="var(--muted)">${h}h</text>`).join('') + '</svg>';
+  const peak = H.indexOf(max);
+  return head('Usage details', {back: 1, sm: 1}) + `<div class="pad">
+    <div class="card"><h2>By hour today</h2>${s}<p class="small muted" style="margin:8px 0 0">Busiest hour: ${peak}:00 to ${peak + 1}:00 with ${max} minutes.</p></div>
+    <div class="card"><h2>Week by day</h2>${weekChart()}</div>
+    <div class="card"><h2>Apps</h2><div class="list">${USAGE.apps.map(a => `<div class="li"><span class="dot" style="background:${a[2]}"></span><span class="grow">${a[0]}</span>
+      <span class="small muted">${fmt(a[1])} today</span></div>`).join('')}</div></div>
+    <p class="small muted">Sample data. A real build reads this from the phone's usage statistics.</p></div>`;
+}
+function msgList() {
+  const q = ui.q.trim().toLowerCase();
+  const l = S.contacts.filter(c => (ui.filt === 'all' || c.unread) && (!q || (c.name + ' ' + c.msgs[c.msgs.length - 1].t).toLowerCase().includes(q)));
+  if (!l.length) return '<div class="empty">No conversations match.</div>';
+  return `<div class="list" style="padding:0 16px">${l.map(c => { const m = c.msgs[c.msgs.length - 1];
+    return `<button class="li" data-a="go" data-v="chat" data-id="${c.id}"><div class="avatar" style="background:${c.color}">${c.name[0]}</div>
+      <div class="grow"><div class="row"><b class="grow ell">${esc(c.name)}</b><span class="small muted">${esc(m.time)}</span></div>
+      <div class="row"><span class="grow ell small ${c.unread ? '' : 'muted'}" ${c.unread ? 'style="font-weight:600"' : ''}>${m.me ? 'You: ' : ''}${esc(m.t)}</span>${c.unread ? `<span class="badge">${c.unread}</span>` : ''}</div></div></button>`; }).join('')}</div>`;
+}
+function vMessages() {
+  return head('Messages', {right: gearBtn, sub: S.connected ? 'Connected as your Instagram account' : 'Preview with sample conversations'}) +
+    (S.connected ? '' : `<button class="banner" style="display:block;width:calc(100% - 32px);margin:0 16px 12px;text-align:left" data-a="go" data-v="connect">
+      <b>Connect your Instagram</b><div class="small muted">See what is possible with a personal account</div></button>`) +
+    `<label class="search">${ic('search', 18)}<input id="q" type="search" placeholder="Search messages" value="${esc(ui.q)}" aria-label="Search messages"></label>
+    <div class="chips"><button class="chip ${ui.filt === 'all' ? 'on' : ''}" data-a="filt" data-f="all">All</button>
+      <button class="chip ${ui.filt === 'unread' ? 'on' : ''}" data-a="filt" data-f="unread">Unread</button></div><div id="list">${msgList()}</div>`;
+}
+function vChat() {
+  const c = contact(cur().id);
+  return `<div style="display:flex;flex-direction:column;flex:1;min-height:0">` + head(esc(c.name), {back: 1, sm: 1, right: `<div class="avatar" style="background:${c.color};width:36px;height:36px;font-size:14px">${c.name[0]}</div>`}) +
+    `<div class="msgs" id="msgs">${c.msgs.map(m => `<div class="bub ${m.me ? 'me' : ''}">${esc(m.t)}<time>${esc(m.time)}</time></div>`).join('')}</div>
+    <form class="composer" id="composer"><input id="msgin" placeholder="Message ${esc(c.name)}" autocomplete="off" aria-label="Message"><button class="send" aria-label="Send">${ic('send', 20)}</button></form></div>`;
+}
+function vNews() {
+  const list = S.news.filter(n => ui.newsTab === 'today' || n.saved);
+  const unread = S.news.filter(n => !n.read).length;
+  return head('AI News', {right: gearBtn, sub: `Sample digest · ${unread} unread`}) +
+    `<div class="chips"><button class="chip ${ui.newsTab === 'today' ? 'on' : ''}" data-a="ntab" data-f="today">Today</button>
+     <button class="chip ${ui.newsTab === 'saved' ? 'on' : ''}" data-a="ntab" data-f="saved">Saved</button></div><div class="pad">` +
+    (list.length ? list.map(n => `<article class="card" style="${n.read ? 'opacity:.7' : ''}"><div class="tag">${n.tag} · ${n.min} min</div>
+      <h3 class="serif" style="margin:6px 0;font-size:18px;line-height:1.25">${esc(n.t)}</h3><p class="muted small" style="margin:0 0 12px">${esc(n.s)}</p>
+      <div class="row"><button class="btn ghost" data-a="nread" data-id="${n.id}">${n.read ? 'Mark unread' : ic('check', 18) + ' Mark as read'}</button>
+      <button class="iconbtn" data-a="nsave" data-id="${n.id}" aria-label="${n.saved ? 'Unsave' : 'Save'}" aria-pressed="${!!n.saved}" style="${n.saved ? 'color:var(--accent)' : ''}">${ic('mark')}</button></div></article>`).join('')
+      : '<div class="empty">Nothing saved yet. Tap the bookmark on a story to keep it.</div>') + '</div>';
+}
+function folderCard(t, wide) {
+  const s = topicStats(t);
+  return `<button class="folder" data-a="go" data-v="topic" data-id="${t.id}" style="${wide ? 'min-height:0;width:100%;margin-bottom:12px' : ''}">
+    <div class="row" style="width:100%;${wide ? '' : 'flex-direction:column;align-items:flex-start;gap:8px'}">${mono(t)}<div class="grow" style="width:100%"><b class="serif ${wide ? 'ell' : ''}" style="font-size:17px;display:block;line-height:1.2">${esc(t.name)}</b><span class="small muted">${s.total} items · ${s.done} done</span></div>${wide ? `<span class="muted">${ic('chev', 18)}</span>` : ''}</div>
+    ${t.goal ? `<span class="goal">${esc(t.goal)}</span>` : ''}<div class="bar" style="width:100%"><i style="width:${s.pct}%;background:${t.c}"></i></div></button>`;
+}
+function vShelf(sec) {
+  const lib = sec === 'lib', l = S.topics.filter(t => t.sec === sec);
+  return head(lib ? 'Library' : 'Upskill', {serif: 1, right: notesBtn + gearBtn, sub: lib ? 'Thinkers and writers you are reading' : 'Sales, marketing and case studies'}) +
+    `<div class="pad"><div class="${lib ? 'grid2' : ''}">${l.map(t => folderCard(t, !lib)).join('')}
+    <button class="folder add" data-a="addTopic" data-s="${sec}" style="${lib ? '' : 'min-height:72px;margin-top:12px;width:100%'}">${ic('plus', 26)}<span>Add topic</span></button></div></div>`;
+}
+function itemRow(t, i) {
+  return `<div class="li"><button class="grow" data-a="go" data-v="item" data-id="${t.id}" data-i="${i.id}" style="text-align:left;min-height:44px;display:block;padding:2px 0">
+    <b class="serif" style="font-size:16px;display:block">${esc(i.t)}</b><span class="small muted">${esc(i.k)}${i.m ? ' · ' + esc(i.m) : ''}</span></button>
+    <button class="status ${i.st === 2 ? 'done' : ''}" data-a="cycle" data-id="${t.id}" data-i="${i.id}" aria-label="Status: ${['To read', 'Reading', 'Done'][i.st]}. Tap to change">${['To read', 'Reading', 'Done'][i.st]}</button></div>`;
+}
+function vTopic() {
+  const t = topic(cur().id), notes = S.notes.filter(n => n.topic === t.id);
+  const custom = t.custom;
+  return head(esc(t.name), {back: 1, sm: 1, serif: 1, right: mono(t, 'width:36px;height:36px;font-size:15px')}) + `<div class="pad">
+    ${t.goal ? `<div class="card"><h2>What I want to find out</h2><p style="margin:0">${esc(t.goal)}</p></div>` : ''}
+    <div class="card"><div class="row"><h2 class="grow" style="margin:0">${t.sec === 'lib' ? 'Reading list' : 'Lessons and case studies'}</h2>
+      <button class="chip" data-a="addItem" data-id="${t.id}">${ic('plus', 16)} Add</button></div>
+      <div class="list" style="margin-top:6px">${t.items.map(i => itemRow(t, i)).join('') || '<div class="empty">Nothing here yet. Add the first thing you want to read.</div>'}</div></div>
+    <div class="card"><div class="row"><h2 class="grow" style="margin:0">Notes</h2><button class="chip" data-a="newNote" data-id="${t.id}">${ic('plus', 16)} New note</button></div>
+      <div class="list" style="margin-top:6px">${notes.map(noteRow).join('') || '<div class="empty">Write down what you are learning.</div>'}</div></div>
+    ${custom ? `<div class="row"><button class="btn ghost grow" data-a="rename" data-id="${t.id}">${ic('edit', 18)} Rename</button><button class="btn danger grow" data-a="delTopic" data-id="${t.id}">${ic('trash', 18)} Delete</button></div>` : ''}</div>`;
+}
+function vItem() {
+  const t = topic(cur().id), i = t.items.find(x => x.id === cur().i), notes = S.notes.filter(n => n.item === i.id);
+  return head(esc(t.name), {back: 1, sm: 1, serif: 1}) + `<div class="pad">
+    <div class="card"><div class="small muted">${esc(i.k)}${i.m ? ' · ' + esc(i.m) : ''}</div><h2 class="serif" style="font-size:22px;text-transform:none;letter-spacing:0;color:var(--text);margin:6px 0 12px;line-height:1.25">${esc(i.t)}</h2>
+      <div class="seg" role="group" aria-label="Progress">${['To read', 'Reading', 'Done'].map((l, n) => `<button class="${i.st === n ? 'on' : ''}" data-a="setSt" data-id="${t.id}" data-i="${i.id}" data-n="${n}" aria-pressed="${i.st === n}">${l}</button>`).join('')}</div></div>
+    ${i.tk ? `<div class="card"><h2>Key idea</h2><p class="serif" style="margin:0;font-size:17px;line-height:1.45">${esc(i.tk)}</p></div>` : ''}
+    <div class="card"><div class="row"><h2 class="grow" style="margin:0">My notes</h2><button class="chip" data-a="newNote" data-id="${t.id}" data-i="${i.id}">${ic('plus', 16)} New note</button></div>
+      <div class="list" style="margin-top:6px">${notes.map(noteRow).join('') || '<div class="empty">No notes on this yet.</div>'}</div></div>
+    ${t.custom ? `<button class="btn danger block" data-a="delItem" data-id="${t.id}" data-i="${i.id}">${ic('trash', 18)} Remove item</button>` : ''}</div>`;
+}
+function notesList() {
+  const q = ui.nq.trim().toLowerCase();
+  const l = S.notes.filter(n => (ui.nf === 'all' || n.topic === ui.nf) && (!q || (n.title + ' ' + n.body).toLowerCase().includes(q)));
+  return l.length ? `<div class="list" style="padding:0 16px">${l.map(noteRow).join('')}</div>` : '<div class="empty">No notes yet. Open a topic and tap New note.</div>';
+}
+function vNotes() {
+  return head('All notes', {back: 1, sm: 1}) + `<label class="search">${ic('search', 18)}<input id="nq" type="search" placeholder="Search notes" value="${esc(ui.nq)}" aria-label="Search notes"></label>
+    <div class="chips"><button class="chip ${ui.nf === 'all' ? 'on' : ''}" data-a="nfilt" data-f="all">All</button>
+    ${S.topics.map(t => `<button class="chip ${ui.nf === t.id ? 'on' : ''}" data-a="nfilt" data-f="${t.id}">${esc(t.name)}</button>`).join('')}</div><div id="list">${notesList()}</div>`;
+}
+function vNote() {
+  const n = S.notes.find(x => x.id === cur().id), t = topic(n.topic);
+  return head('Note', {back: 1, sm: 1, right: `<button class="iconbtn" data-a="delNote" aria-label="Delete note" style="color:var(--danger)">${ic('trash')}</button>`}) +
+    `<div class="pad" style="display:flex;flex-direction:column;flex:1"><div class="small muted" style="margin-bottom:8px">${esc(t ? t.name : '')} · ${esc(n.date)}</div>
+    <input class="field serif" id="ntitle" placeholder="Title" value="${esc(n.title)}" style="font-size:20px;font-weight:700;margin-bottom:10px" aria-label="Note title">
+    <textarea class="field" id="nbody" placeholder="Write what you noticed, what surprised you, what to try..." style="flex:1;min-height:260px;line-height:1.5" aria-label="Note text">${esc(n.body)}</textarea></div>`;
+}
+function vSettings() {
+  const s = S.settings;
+  const seg = (k, opts, v) => `<div class="seg">${opts.map(o => `<button class="${v === o[0] ? 'on' : ''}" data-a="set" data-k="${k}" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>`;
+  return head('Settings', {back: 1, sm: 1}) + `<div class="pad">
+    <div class="card"><h2>Appearance</h2>${seg('theme', [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']], s.theme)}</div>
+    <div class="card"><h2>Daily screen time limit</h2>${seg('limit', [[120, '2h'], [180, '3h'], [240, '4h']], s.limit)}
+      <p class="small muted" style="margin:10px 0 0">Today you are at ${fmt(TODAY)}. Choose 2h to preview the limit reached message.</p></div>
+    <div class="card"><div class="row"><div class="grow"><b>Gentle reminder</b><div class="small muted">A quiet nudge 15 minutes before the limit</div></div>
+      <button class="switch ${s.remind ? 'on' : ''}" role="switch" aria-checked="${s.remind}" aria-label="Gentle reminder" data-a="remind"></button></div></div>
+    <div class="card"><div class="row"><div class="grow"><b>Instagram</b><div class="small muted">${S.connected ? 'Connected (demo)' : 'Not connected'}</div></div>
+      <button class="btn ghost" data-a="go" data-v="connect">${S.connected ? 'Manage' : 'Connect'}</button></div></div>
+    <div class="card"><h2>About this design</h2><p class="small muted" style="margin:0 0 8px">Sample content. Notes, topics and messages you add are kept in this browser only.</p>
+      <p class="small muted" style="margin:0 0 8px"><b>Whole-phone screen time:</b> Android can provide it through the Usage Access permission. iOS only allows it through Apple's Screen Time API with a special entitlement.</p></div>
+    <button class="btn danger block" data-a="reset">Reset demo data</button></div>`;
+}
+function vConnect() {
+  return head('Instagram', {back: 1, sm: 1}) + `<div class="pad"><div class="card" style="text-align:center;padding:28px 16px">
+    <div class="avatar" style="background:var(--accent);color:var(--on-accent);width:64px;height:64px;margin:0 auto 12px">${ic('chat', 30)}</div>
+    <h2 style="font-size:20px;text-transform:none;letter-spacing:0;color:var(--text);margin:0 0 8px">${S.connected ? 'Connected (demo)' : 'Read and send DMs here'}</h2>
+    <p class="muted small" style="margin:0 0 16px">Your messages appear in this app, so you can reply without opening the feed.</p>
+    <button class="btn block" data-a="connect">${S.connected ? 'Disconnect' : 'Connect (demo)'}</button></div>
+    <div class="card"><h2>Please note</h2><p class="small muted" style="margin:0 0 8px">Instagram's official messaging API supports <b>Business and Creator</b> accounts linked to a Facebook Page.</p>
+      <p class="small muted" style="margin:0">Personal accounts cannot read or send DMs through any official route, and unofficial tools break Instagram's terms and can get an account banned. Switching to a free Creator account is the safe way to build this for real.</p></div></div>`;
+}
+
+/* ---------- render ---------- */
+const TABS = [['today', 'Today', 'today'], ['messages', 'Messages', 'chat'], ['news', 'AI News', 'news'], ['library', 'Library', 'book'], ['upskill', 'Upskill', 'up']];
+function render(keepScroll) {
+  const v = cur(), root = ui.stack[0].n;
+  const V = {today: vToday, usage: vUsage, messages: vMessages, chat: vChat, news: vNews, library: () => vShelf('lib'), upskill: () => vShelf('up'),
+    topic: vTopic, item: vItem, notes: vNotes, note: vNote, settings: vSettings, connect: vConnect};
+  const sc = $('#screen'), top = sc.scrollTop;
+  sc.innerHTML = V[v.n]();
+  sc.scrollTop = keepScroll ? top : 0;
+  const unread = S.contacts.reduce((a, c) => a + c.unread, 0);
+  $('#tabs').innerHTML = (v.n === 'chat' || v.n === 'note') ? '' : `<nav class="tabbar" aria-label="Sections">${TABS.map(t => `<button class="tab ${root === t[0] ? 'on' : ''}" data-a="tab" data-t="${t[0]}" ${root === t[0] ? 'aria-current="page"' : ''}>
+    ${ic(t[2])}<span>${t[1]}</span>${t[0] === 'messages' && unread ? `<span class="badge">${unread}</span>` : ''}</button>`).join('')}</nav>`;
+  if (v.n === 'chat') { const m = $('#msgs'); m.scrollTop = m.scrollHeight; }
+  renderModal();
+}
+function renderModal() {
+  const m = ui.modal, el = $('#modal');
+  if (!m) { el.innerHTML = ''; return; }
+  const sw = (sel) => `<div class="swatches" role="radiogroup" aria-label="Color">${COLORS.map(c => `<button type="button" class="sw ${c === sel ? 'on' : ''}" style="background:${c}" data-a="pick" data-c="${c}" role="radio" aria-checked="${c === sel}" aria-label="Color ${c}"></button>`).join('')}</div>`;
+  let body = '';
+  if (m.type === 'topic') body = `<h3>New topic</h3><label for="m1">Name</label><input class="field" id="m1" placeholder="e.g. Stoicism, SQL, Negotiation" maxlength="40">
+    <label for="m2">What do I want to find out?</label><textarea class="field" id="m2" placeholder="Optional. One line about why you care."></textarea><label>Color</label>${sw(m.c)}`;
+  if (m.type === 'item') body = `<h3>Add to ${esc(topic(m.id).name)}</h3><label for="m1">Title</label><input class="field" id="m1" placeholder="Book, article, video, case study..." maxlength="80">`;
+  if (m.type === 'rename') body = `<h3>Rename topic</h3><label for="m1">Name</label><input class="field" id="m1" value="${esc(topic(m.id).name)}" maxlength="40">`;
+  el.innerHTML = `<div class="modalbg" data-a="mclose"><form class="sheet" id="mform" role="dialog" aria-modal="true">${body}
+    <div class="row" style="margin-top:18px"><button type="button" class="btn ghost grow" data-a="mclose">Cancel</button><button class="btn grow">Save</button></div></form></div>`;
+  const f = $('#m1'); if (f) f.focus();
+}
+function go(v, extra) { ui.stack.push(Object.assign({n: v}, extra)); render(); }
+function back() {
+  const v = cur();
+  if (v.n === 'note') { const n = S.notes.find(x => x.id === v.id); if (n && !n.title.trim() && !n.body.trim()) { S.notes = S.notes.filter(x => x !== n); save(); } }
+  if (ui.stack.length > 1) ui.stack.pop(); render();
+}
+
+/* ---------- actions ---------- */
+const A = {
+  tab: d => { ui.stack = [{n: d.t}]; ui.q = ''; ui.filt = 'all'; render(); },
+  go: d => go(d.v, {id: d.id, i: d.i}),
+  back,
+  snooze: d => { ui.snooze = true; render(true); },
+  filt: d => { ui.filt = d.f; render(true); },
+  ntab: d => { ui.newsTab = d.f; render(); },
+  nread: d => { const n = S.news.find(x => x.id === d.id); n.read = n.read ? 0 : 1; save(); render(true); },
+  nsave: d => { const n = S.news.find(x => x.id === d.id); n.saved = n.saved ? 0 : 1; save(); render(true); },
+  addTopic: d => { ui.modal = {type: 'topic', sec: d.s, c: COLORS[S.topics.length % COLORS.length]}; renderModal(); },
+  addItem: d => { ui.modal = {type: 'item', id: d.id}; renderModal(); },
+  rename: d => { ui.modal = {type: 'rename', id: d.id}; renderModal(); },
+  pick: d => { ui.modal.c = d.c; const keep = [$('#m1') && $('#m1').value, $('#m2') && $('#m2').value]; renderModal(); if ($('#m1')) $('#m1').value = keep[0] || ''; if ($('#m2')) $('#m2').value = keep[1] || ''; },
+  mclose: (d, e) => { if (e.target.closest('.sheet') && !e.target.closest('button[data-a="mclose"]')) return; ui.modal = null; renderModal(); },
+  cycle: d => { const i = topic(d.id).items.find(x => x.id === d.i); i.st = (i.st + 1) % 3; save(); render(true); },
+  setSt: d => { topic(d.id).items.find(x => x.id === d.i).st = +d.n; save(); render(true); },
+  delTopic: d => { if (!confirm('Delete this topic and its notes?')) return; S.topics = S.topics.filter(t => t.id !== d.id); S.notes = S.notes.filter(n => n.topic !== d.id); save(); ui.stack.pop(); render(); },
+  delItem: d => { if (!confirm('Remove this item and its notes?')) return; const t = topic(d.id); t.items = t.items.filter(x => x.id !== d.i); S.notes = S.notes.filter(n => n.item !== d.i); save(); ui.stack.pop(); render(); },
+  newNote: d => { const n = {id: uid(), topic: d.id, item: d.i || null, title: '', body: '', date: nowDate()}; S.notes.unshift(n); save(); go('note', {id: n.id}); $('#ntitle').focus(); },
+  openNote: d => go('note', {id: d.id}),
+  delNote: () => { const id = cur().id; S.notes = S.notes.filter(n => n.id !== id); save(); ui.stack.pop(); render(); },
+  nfilt: d => { ui.nf = d.f; render(true); },
+  set: d => { const k = d.k; S.settings[k] = k === 'limit' ? +d.v : d.v; if (k === 'limit') ui.snooze = false; save(); applyTheme(); render(true); },
+  remind: () => { S.settings.remind = !S.settings.remind; save(); render(true); },
+  connect: () => { S.connected = !S.connected; save(); render(true); },
+  reset: () => { if (!confirm('Reset all topics, notes and messages to the sample data?')) return; S = seed(); save(); applyTheme(); ui.stack = [{n: 'today'}]; ui.snooze = false; render(); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (el && A[el.dataset.a]) A[el.dataset.a](el.dataset, e);
+});
+document.addEventListener('input', e => {
+  const id = e.target.id, v = e.target.value;
+  if (id === 'q') { ui.q = v; $('#list').innerHTML = msgList(); }
+  else if (id === 'nq') { ui.nq = v; $('#list').innerHTML = notesList(); }
+  else if (id === 'ntitle' || id === 'nbody') {
+    const n = S.notes.find(x => x.id === cur().id); if (!n) return;
+    n[id === 'ntitle' ? 'title' : 'body'] = v; n.date = nowDate(); save();
+  }
+});
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  if (e.target.id === 'composer') {
+    const inp = $('#msgin'), t = inp.value.trim(); if (!t) return;
+    const c = contact(cur().id); c.msgs.push({me: 1, t, time: nowTime()}); save(); render(true); $('#msgin').focus();
+    return;
+  }
+  if (e.target.id === 'mform') {
+    const m = ui.modal, name = ($('#m1').value || '').trim(); if (!name) { $('#m1').focus(); return; }
+    if (m.type === 'topic') {
+      const t = {id: 't' + uid(), sec: m.sec, name, c: m.c, goal: ($('#m2').value || '').trim(), items: [], custom: true};
+      S.topics.push(t); ui.modal = null; save(); render(); go('topic', {id: t.id}); return;
+    }
+    if (m.type === 'item') { topic(m.id).items.push({id: uid(), t: name, k: 'Added by me', m: '', tk: '', st: 0}); }
+    if (m.type === 'rename') { topic(m.id).name = name; }
+    ui.modal = null; save(); render(true);
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.modal) { ui.modal = null; renderModal(); } });
+// opening a chat clears its unread count
+const _go = go;
+go = function (v, extra) { if (v === 'chat') { const c = contact(extra.id); if (c) { c.unread = 0; save(); } } _go(v, extra); };
+
+applyTheme();
+render();
+</script>
+</body>
+</html>

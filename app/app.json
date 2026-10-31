@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Personal Hub",
+    "slug": "personal-hub",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "personalhub",
+    "userInterfaceStyle": "automatic",
+    "platforms": [
+      "android"
+    ],
+    "android": {
+      "package": "com.personalhub.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
