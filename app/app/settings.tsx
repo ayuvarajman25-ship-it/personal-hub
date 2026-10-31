@@ -50,6 +50,18 @@ export default function SettingsScreen() {
       </Card>
 
       <Card>
+        <Label>Instagram messages</Label>
+        <Seg<'on' | 'off'>
+          options={[['on', 'Messages only'], ['off', 'Full Instagram']]}
+          value={settings.messagesOnly === false ? 'off' : 'on'}
+          onChange={(v) => setSettings({ messagesOnly: v === 'on' })}
+        />
+        <Muted style={{ marginTop: 10 }}>
+          Messages only sends you back to your inbox if you open the feed, explore or reels. The Messages tab shows Instagram's own website inbox, so you stay signed in with your personal account.
+        </Muted>
+      </Card>
+
+      <Card>
         <Label>Usage access</Label>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <View style={{ flex: 1 }}>
@@ -70,7 +82,7 @@ export default function SettingsScreen() {
 
       <Card>
         <Label>About</Label>
-        <Muted>Your topics and notes are stored on this phone only. Messages are not part of this version.</Muted>
+        <Muted>Your topics and notes are stored on this phone only. Messages are Instagram's website inbox inside the app, so there are no notifications when the app is closed.</Muted>
       </Card>
 
       <Btn kind="danger" title="Reset to starting data" onPress={confirmReset} />

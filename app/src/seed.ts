@@ -9,7 +9,7 @@ const topic = (
 // Only the starting list of topics. Their content (articles, books, quotes, news) is fetched online.
 export function seed(): State {
   return {
-    settings: { theme: 'auto', limitMin: 180 },
+    settings: { theme: 'auto', limitMin: 180, messagesOnly: true },
     notes: [],
     progress: {},
     topics: [

@@ -41,6 +41,8 @@ export interface Note {
 export interface Settings {
   theme: 'auto' | 'light' | 'dark';
   limitMin: number;
+  /** Keep the Instagram inbox on messages only (no feed, explore or reels). Treated as on when missing. */
+  messagesOnly?: boolean;
 }
 
 export interface State {

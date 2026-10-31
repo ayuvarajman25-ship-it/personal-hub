@@ -22,6 +22,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={tab('Today', 'home-outline')} />
+      <Tabs.Screen name="messages" options={tab('Messages', 'chatbubble-outline')} />
       <Tabs.Screen name="library" options={tab('Library', 'book-outline')} />
       <Tabs.Screen name="upskill" options={tab('Upskill', 'trending-up-outline')} />
       <Tabs.Screen name="notes" options={tab('Notes', 'document-text-outline')} />

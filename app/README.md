@@ -1,7 +1,7 @@
 # Personal Hub (Android)
 
-Your reading topics, notes and phone screen time in one quiet app. Version 1 has four tabs:
-Today (screen time), Library, Upskill and Notes. Your topics and notes are stored on the phone.
+Your reading topics, notes, Instagram messages and phone screen time in one quiet app. Tabs:
+Today (screen time), Messages, Library, Upskill and Notes. Your topics and notes are stored on the phone.
 
 All topic content is fetched from the internet the first time you open a topic, then saved on the
 phone for offline reading (refresh button in the top right of a topic):
@@ -17,7 +17,18 @@ phone for offline reading (refresh button in the top right of a topic):
 Add any topic you want to learn about with **Add topic** (a subject or a person/author) and it gets the
 same treatment. The search terms for the built-in topics are in `src/seed.ts`.
 
-Messages (Instagram) are not in this version. The clickable design for it is in `../index.html`.
+## Messages (Instagram)
+
+The Messages tab shows Instagram's own website inbox (`instagram.com/direct/inbox`) inside the app, signed in
+with your personal account, so you can read and send DMs without the Instagram app installed.
+Why not the official API: it only supports Professional accounts, can only reply within 24 hours, cannot start
+new chats or groups, and needs a server for live alerts.
+
+- Settings has **Messages only** (default on): if the page tries to open the feed, explore or reels it is sent back to the inbox.
+- The phone's back button goes back inside Instagram first.
+- No notifications while the app is closed, and photos/video uploads depend on Android's file picker.
+- Untested against the real Instagram site: sign-in, any security check and the guard have not been tried yet.
+- The clickable design is in `../index.html`.
 
 ## Status
 
